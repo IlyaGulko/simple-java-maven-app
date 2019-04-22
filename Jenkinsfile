@@ -17,7 +17,7 @@
 //   }
 // } 
 pipeline {
-    agent none
+    agent any
     stages {
         stage('java') {
             agent {
