@@ -17,7 +17,7 @@
 //   }
 // } 
 pipeline {
-    agent ssh_agent
+    agent none
     stages {
         stage('java') {
             agent {
