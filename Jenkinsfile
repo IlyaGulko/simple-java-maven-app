@@ -10,22 +10,24 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
+        // stage('Test') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
             // post {
             //     always {
             //         junit 'target/surefire-reports/*.xml'
             //     }
             // }
-        }
+        // }
         stage('Deliver') {
             steps {
                 // sh './jenkins/scripts/deliver.sh'
                 sh 'set -x'
                 sh 'mvn jar:jar install:install help:evaluate -Dexpression=project.name'
-                sh 'java -jar target/javaproject-${VERSION}.jar'
+                sh 'NAME=`mvn help:evaluate -Dexpression=project.name | grep "^[^\[]"`'
+                sh 'VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`'
+                sh 'java -jar target/${NAME}-${VERSION}.jar'
                 sh 'set +x'
             }
         }
@@ -33,7 +35,7 @@ pipeline {
             steps {
                 script {
                     pom = readMavenPom file: "pom.xml";
-                    filesByGlob = findFiles(glob: "./*.${pom.packaging}");
+                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
                     echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                     artifactPath = filesByGlob[0].path;
                     artifactExists = fileExists artifactPath;
