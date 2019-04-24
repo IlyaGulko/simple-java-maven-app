@@ -24,9 +24,9 @@ pipeline {
             steps {
                 // sh './jenkins/scripts/deliver.sh'
                 sh 'set -x'
-                sh 'NAME=javaproject; VERSION=latest'
+                sh 'ls -lR'
                 sh 'mvn jar:jar install:install help:evaluate -Dexpression=project.name'
-                sh 'java -jar target/${NAME}-${VERSION}.jar'
+                sh 'java -jar target/javaproject-latest.jar'
                 sh 'set +x'
             }
         }
